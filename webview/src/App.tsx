@@ -14,6 +14,7 @@ import {
     type StatePayload,
     type ToWebview,
     createItem,
+    defaultIcon,
 } from '../../src/types';
 
 interface Editing {
@@ -23,12 +24,6 @@ interface Editing {
 }
 
 const QUICK_START: ActionType[] = ['terminal', 'command', 'url', 'file'];
-const QUICK_START_ICONS: Record<ActionType, string> = {
-    terminal: 'terminal',
-    command: 'symbol-event',
-    url: 'globe',
-    file: 'file',
-};
 
 export function App() {
     const [state, setState] = useState<StatePayload | null>(null);
@@ -151,7 +146,7 @@ export function App() {
                     <div className="mt-4 flex flex-wrap gap-2">
                         {QUICK_START.map((type) => (
                             <Button key={type} variant="secondary" onClick={() => startNew(tab, type)}>
-                                <Icon name={QUICK_START_ICONS[type]} />
+                                <Icon name={defaultIcon(type)} />
                                 {ACTION_LABELS[type]}
                             </Button>
                         ))}

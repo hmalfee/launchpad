@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import type { Resolved } from './store';
-import { defaultIcon, summarizeAction } from './types';
+import { defaultIcon, isImageIcon, summarizeAction } from './types';
 
 type Node = { kind: 'item'; resolved: Resolved } | { kind: 'group'; name: string; children: Resolved[] };
 
@@ -41,7 +41,10 @@ export class SidebarProvider implements vscode.TreeDataProvider<Node> {
         const { key, scope, item } = node.resolved;
         const t = new vscode.TreeItem(item.label, vscode.TreeItemCollapsibleState.None);
         t.id = key;
-        t.iconPath = new vscode.ThemeIcon(item.icon || defaultIcon(item));
+        const iconStr = item.icon || defaultIcon(item);
+        t.iconPath = isImageIcon(iconStr)
+            ? vscode.Uri.parse(iconStr)
+            : new vscode.ThemeIcon(iconStr);
         t.description = scope === 'workspace' ? 'project' : undefined;
         t.tooltip = item.description || summarizeAction(item.action);
         t.contextValue = 'launcher';

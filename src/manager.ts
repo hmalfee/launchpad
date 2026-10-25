@@ -54,7 +54,7 @@ export class ManagerPanel {
             `default-src 'none'`,
             `style-src ${webview.cspSource} 'unsafe-inline'`,
             `font-src ${webview.cspSource} data:`,
-            `img-src ${webview.cspSource} data:`,
+            `img-src ${webview.cspSource} data: https:`,
             `script-src 'nonce-${nonce}'`,
         ].join('; ');
 

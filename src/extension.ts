@@ -20,12 +20,12 @@ export function activate(context: vscode.ExtensionContext): void {
         ManagerPanel.refresh();
     };
 
+    const open = (intent?: Intent) => ManagerPanel.show(context, intent);
     const keyFrom = (arg: unknown): string | undefined => {
         if (typeof arg === 'string') return arg;
         const node = arg as SidebarNode | undefined;
         return node?.kind === 'item' ? node.resolved.key : undefined;
     };
-    const open = (intent?: Intent) => ManagerPanel.show(context, intent);
 
     context.subscriptions.push(
         statusBar,

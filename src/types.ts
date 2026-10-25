@@ -132,8 +132,14 @@ export function createItem(type: ActionType = 'terminal'): LauncherItem {
     };
 }
 
-export function defaultIcon(item: Pick<LauncherItem, 'action'>): string {
-    switch (item.action.type) {
+const IMAGE_EXTS = /\.(svg|png|jpe?g|gif|webp)$/i;
+export function isImageIcon(icon: string): boolean {
+    return /^https?:\/\//i.test(icon) || IMAGE_EXTS.test(icon);
+}
+
+export function defaultIcon(actionOrItem: ActionType | { action: { type: ActionType } }): string {
+    const type = typeof actionOrItem === 'string' ? actionOrItem : actionOrItem.action.type;
+    switch (type) {
         case 'command':
             return 'symbol-event';
         case 'url':

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import type { Resolved } from './store';
-import { defaultIcon, summarizeAction } from './types';
+import { defaultIcon, isImageIcon, summarizeAction } from './types';
 
 export class StatusBarController implements vscode.Disposable {
     private bars: vscode.StatusBarItem[] = [];
@@ -19,7 +19,7 @@ export class StatusBarController implements vscode.Disposable {
             );
             bar.name = `Launchpad: ${item.label}`;
 
-            const icon = item.icon || (o.showLabel ? '' : defaultIcon(item));
+            const icon = (item.icon && !isImageIcon(item.icon) ? item.icon : null) ?? (o.showLabel ? '' : defaultIcon(item));
             const glyph = icon ? `$(${icon})` : '';
             bar.text = o.showLabel || !glyph ? [glyph, item.label].filter(Boolean).join(' ') : glyph;
             bar.tooltip = item.description || `${item.label}: ${summarizeAction(item.action)}`;

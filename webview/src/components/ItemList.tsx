@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Icon } from '@/components/Icon';
 import { cn } from '@/lib/utils';
-import { type LauncherItem, PLACEMENT_LABELS, defaultIcon, summarizeAction } from '../../../src/types';
+import { type LauncherItem, PLACEMENT_LABELS, defaultIcon, newId, summarizeAction } from '../../../src/types';
 
 interface Props {
     items: LauncherItem[];
@@ -29,7 +29,7 @@ export function ItemList({ items, onChange, onEdit, onRun }: Props) {
         const src = items[index];
         const copy: LauncherItem = {
             ...structuredClone(src),
-            id: Math.random().toString(36).slice(2, 10),
+            id: newId(),
             label: `${src.label} copy`,
         };
         onChange([...items.slice(0, index + 1), copy, ...items.slice(index + 1)]);

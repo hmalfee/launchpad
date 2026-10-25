@@ -3,11 +3,11 @@ import type { Resolved } from './store';
 import type { CommandAction, FileAction, LauncherItem, TerminalAction, UrlAction } from './types';
 import { Cancelled, expandPath, resolveVars, workspaceRoot } from './variables';
 
-export async function runItem({ item }: Resolved): Promise<void> {
+export async function runItem({ item }: Resolved, locationOverride?: 'panel' | 'editor'): Promise<void> {
     try {
         switch (item.action.type) {
             case 'terminal':
-                return await runTerminal(item, item.action);
+                return await runTerminal(item, item.action, locationOverride);
             case 'command':
                 return await runCommand(item.action);
             case 'url':
@@ -22,12 +22,17 @@ export async function runItem({ item }: Resolved): Promise<void> {
     }
 }
 
-async function runTerminal(item: LauncherItem, a: TerminalAction): Promise<void> {
+async function runTerminal(
+    item: LauncherItem,
+    a: TerminalAction,
+    locationOverride?: 'panel' | 'editor',
+): Promise<void> {
+    const location = locationOverride ?? a.location;
     const existing = vscode.window.terminals.find(
         (t) =>
             t.name === item.label &&
             t.exitStatus === undefined &&
-            (a.location === 'editor'
+            (location === 'editor'
                 ? t.creationOptions.location instanceof Object &&
                   'viewColumn' in (t.creationOptions.location as object)
                 : !(
@@ -61,7 +66,7 @@ async function runTerminal(item: LauncherItem, a: TerminalAction): Promise<void>
         terminal = vscode.window.createTerminal({
             name: item.label,
             cwd,
-            location: a.location === 'editor' ? { viewColumn: vscode.ViewColumn.Active } : undefined,
+            location: location === 'editor' ? { viewColumn: vscode.ViewColumn.Active } : undefined,
         });
     }
     terminal.show();
