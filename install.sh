@@ -71,7 +71,7 @@ node -e "
     let state = {};
     try {
         const db = new DatabaseSync(vscdbPath, { open: true, readOnly: true });
-        const row = db.prepare(\"SELECT value FROM ItemTable WHERE key = ?\").get('$PUBLISHER.$NAME');
+        const row = db.prepare(\"SELECT value FROM ItemTable WHERE key = ?\").get('local.$NAME');
         db.close();
         if (row?.value) {
             state = JSON.parse(typeof row.value === 'string' ? row.value : Buffer.from(row.value).toString('utf8'));
@@ -113,7 +113,7 @@ node -e "
                 const local = fs.existsSync(dest) ? rel : undefined;
                 return {
                     ...e,
-                    icon: local ? { light: local, dark: local } : '\$(terminal)',
+                    icon: local ? { light: local, dark: local } : '\$(extensions)',
                 };
             }
             return e;
@@ -138,6 +138,11 @@ node -e "
 
         const after = JSON.stringify(pkg, null, 4) + '\n';
         fs.writeFileSync(destPkg, after);
+        const hash = createHash('sha256').update(after).digest('hex').slice(0, 16);
+        state['launchpad.titleManifestHash'] = hash;
+        const dbW = new DatabaseSync(vscdbPath, { open: true });
+        dbW.prepare('INSERT OR REPLACE INTO ItemTable (key, value) VALUES (?, ?)').run('local.$NAME', JSON.stringify(state));
+        dbW.close();
     }
 
     ensureIconsAndWrite().catch(() => {});
