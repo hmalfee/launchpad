@@ -9,6 +9,8 @@ Open the manager with **Launchpad: Open Manager** (command palette) or the gear 
 - **VS Code command**: any command id (searchable), optional JSON arguments.
 - **Open URL** / **Open file**.
 
+Icons can be any VS Code codicon or an image URL (`.svg`, `.png`, `.jpg`, `.gif`, `.webp`). Image icons appear in the sidebar and title bar; the status bar falls back to the default codicon.
+
 Variables work in every field: `${file}` `${relativeFile}` `${fileBasename}` `${fileDirname}` `${workspaceFolder}`
 `${selectedText}` `${lineNumber}` `${clipboard}` `${env:NAME}` `${prompt:Question}`.
 
