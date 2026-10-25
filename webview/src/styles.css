@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@source "./";
+
+/* shadcn/ui tokens, mapped onto the user's VS Code theme so the UI always matches. */
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-hover: var(--secondary-hover);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-input-border: var(--input-border);
+    --color-ring: var(--ring);
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --font-sans: var(--vscode-font-family, system-ui), system-ui, sans-serif;
+    --font-mono: var(--vscode-editor-font-family, ui-monospace), ui-monospace, monospace;
+}
+
+:root {
+    --background: var(--vscode-editor-background, #1e1e1e);
+    --foreground: var(--vscode-foreground, #cccccc);
+    --card: var(--vscode-sideBar-background, var(--vscode-editor-background, #252526));
+    --popover: var(--vscode-quickInput-background, var(--vscode-editorWidget-background, #252526));
+    --popover-foreground: var(--vscode-quickInput-foreground, var(--vscode-foreground, #cccccc));
+    --primary: var(--vscode-button-background, #0e639c);
+    --primary-hover: var(--vscode-button-hoverBackground, #1177bb);
+    --primary-foreground: var(--vscode-button-foreground, #ffffff);
+    --secondary: var(--vscode-button-secondaryBackground, #3a3d41);
+    --secondary-hover: var(--vscode-button-secondaryHoverBackground, #45494e);
+    --secondary-foreground: var(--vscode-button-secondaryForeground, #ffffff);
+    --muted: var(--vscode-input-background, #3c3c3c);
+    --muted-foreground: var(--vscode-descriptionForeground, #9d9d9d);
+    --accent: var(--vscode-list-hoverBackground, #2a2d2e);
+    --accent-foreground: var(--vscode-foreground, #cccccc);
+    --destructive: var(--vscode-errorForeground, #f48771);
+    --border: var(--vscode-widget-border, var(--vscode-panel-border, #454545));
+    --input: var(--vscode-input-background, #3c3c3c);
+    --input-border: var(--vscode-input-border, var(--vscode-widget-border, transparent));
+    --ring: var(--vscode-focusBorder, #007fd4);
+}
+
+@layer base {
+    * {
+        border-color: var(--border);
+    }
+    html,
+    body,
+    #root {
+        height: 100%;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        font-size: var(--vscode-font-size, 13px);
+    }
+    button:not(:disabled),
+    [role="tab"],
+    [role="switch"] {
+        cursor: pointer;
+    }
+    .codicon {
+        line-height: 1;
+    }
+}
+
+@keyframes sheet-in {
+    from {
+        transform: translateX(24px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
