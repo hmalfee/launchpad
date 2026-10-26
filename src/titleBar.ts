@@ -62,6 +62,27 @@ async function cacheIcon(url: string, extensionPath: string): Promise<string | u
     }
 }
 
+/** VS Code serves extension manifests from a scan cache keyed on the extensions folder mtime.
+ *  Deleting it forces a fresh disk scan on the next reload, so our rewritten package.json is read. */
+async function invalidateScanCache(context: vscode.ExtensionContext): Promise<void> {
+    // globalStorageUri = <userData>/User/globalStorage/<publisher.name>
+    const userData = path.resolve(context.globalStorageUri.fsPath, '..', '..', '..');
+    const root = path.join(userData, 'CachedProfilesData');
+    try {
+        for (const profile of await fs.readdir(root)) {
+            // Match all language variants: extensions.user.cache, extensions.user.fr.cache, etc.
+            const dir = path.join(root, profile);
+            for (const file of await fs.readdir(dir)) {
+                if (file.startsWith('extensions.user') && file.endsWith('.cache')) {
+                    await fs.rm(path.join(dir, file), { force: true });
+                }
+            }
+        }
+    } catch {
+        /* no cache directory — nothing to invalidate */
+    }
+}
+
 export class TitleBarController implements vscode.Disposable {
     private handlers: vscode.Disposable[] = [];
     private activeContexts = new Set<string>();
@@ -151,6 +172,7 @@ export class TitleBarController implements vscode.Disposable {
         try {
             await fs.writeFile(file, after);
             await this.context.globalState.update(MANIFEST_HASH_KEY, hash);
+            await invalidateScanCache(this.context);
         } catch (err) {
             void vscode.window.showWarningMessage(
                 `Launchpad could not update title bar buttons: ${err instanceof Error ? err.message : err}`,

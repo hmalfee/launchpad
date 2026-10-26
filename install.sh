@@ -184,4 +184,10 @@ node -e "
 "
 
 echo "Installed to: $DEST"
+
+# Drop VS Code's extension scan cache so the next reload reads our package.json from disk.
+# The cache is keyed on the extensions folder mtime, not individual file contents.
+find "${HOME}/.config/Code/CachedProfilesData" "${HOME}/Library/Application Support/Code/CachedProfilesData" \
+    -name 'extensions.user*.cache' -delete 2>/dev/null || true
+
 echo "Reload VS Code (Developer: Reload Window) to apply."
